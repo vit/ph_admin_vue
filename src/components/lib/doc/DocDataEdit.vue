@@ -17,7 +17,6 @@ const dataToSave = () => {
         info: {subtitle},
         info: {abstract},
         authors
-    // } = data
     } = data_s
     const rez = {
         info: {title, subtitle, abstract},
@@ -30,85 +29,93 @@ const dataToSave = () => {
 
 <template>
 
-<form>
+    <form>
 
-    <div class="data-edit">
-        <label>
-            Title:
-            <input
-                name="title"
-                v-model="data_s.info.title"
-            />
-        </label>
-        <label>
-            Subtitle:
-            <input
-                name="subtitle"
-                v-model="data_s.info.subtitle"
-            />
-        </label>
-        <label>
-            Abstract:
-            <textarea
-                name="abstract"
-                v-model="data_s.info.abstract"
-                rows=6
-            ></textarea>
-        </label>
-    </div>
-    <div class="authors">
-        <h4>Authors</h4>
+        <div class="data-edit">
+            <label>
+                Title:
+                <input
+                    name="title"
+                    v-model="data_s.info.title"
+                />
+            </label>
+            <label>
+                Subtitle:
+                <input
+                    name="subtitle"
+                    v-model="data_s.info.subtitle"
+                />
+            </label>
+            <label>
+                Abstract:
+                <textarea
+                    name="abstract"
+                    v-model="data_s.info.abstract"
+                    rows=6
+                ></textarea>
+            </label>
+        </div>
+        <div class="authors">
+            <h4>Authors</h4>
 
-            <div v-for="(a, i) in data_s.authors" class=author>
-                <label>
-                    First name
-                    <input
-                        name="fname"
-                        placeholder="First name"
-                        v-model="a.fname"
-                    />
-                </label>
-                <label>
-                    Last name
-                    <input
-                        name="lname"
-                        placeholder="Last name"
-                        v-model="a.lname"
-                    />
-                </label>
-                <label>
-                    PIN
-                    <input
-                        name="pin"
-                        placeholder="PIN"
-                        v-model="a.pin"
-                    />
-                </label>
-                <label class=delete>
-                    <button class=button type=button @click=" () => data_s.authors.splice(i, 1) ">Delete</button>
-                </label>
-            </div>
+                <div v-for="(a, i) in data_s.authors" class=author>
+                    <label>
+                        First name
+                        <input
+                            name="fname"
+                            placeholder="First name"
+                            v-model="a.fname"
+                        />
+                    </label>
+                    <label>
+                        Last name
+                        <input
+                            name="lname"
+                            placeholder="Last name"
+                            v-model="a.lname"
+                        />
+                    </label>
+                    <label>
+                        PIN
+                        <input
+                            name="pin"
+                            placeholder="PIN"
+                            v-model="a.pin"
+                        />
+                    </label>
+                    <label class=up>
+                        <button class=button type=button :disabled="i==0" @click=" () =>
+                            (i>0) ? data_s.authors[i] = data_s.authors.splice(i-1, 1, data_s.authors[i])[0] : null
+                        ">&ShortUpArrow;</button>
+                    </label>
+                    <label class=down>
+                        <button class=button type=button :disabled="i >= (data_s.authors.length-1)" @click=" () =>
+                            (i<data_s.authors.length-1) ? data_s.authors[i] = data_s.authors.splice(i+1, 1, data_s.authors[i])[0] : null
+                        ">&ShortDownArrow;</button>
+                    </label>
+                    <label class=delete>
+                        <button class=button type=button @click=" () => data_s.authors.splice(i, 1) ">[X]</button>
+                    </label>
 
-            <p>
-                <button type=button @click=" () => data_s.authors.push({}) ">Add author</button>
-            </p>
-    </div>
+                </div>
+                <p>
+                    <button type=button @click=" () => data_s.authors.push({}) ">Add new author</button>
+                </p>
+        </div>
 
-</form>
+    </form>
 
-<p>
-    <!-- <button onclick={ () => console.log($state.snapshot(data_s)) }>Print</button>
-    <button onclick={ () => onSave( dataToSave() ) }>Save</button>
-    <button onclick={ onCancel }>Cancel</button> -->
+    <p>
+        <!-- <button onclick={ () => console.log($state.snapshot(data_s)) }>Print</button>
+        <button onclick={ () => onSave( dataToSave() ) }>Save</button>
+        <button onclick={ onCancel }>Cancel</button> -->
 
-    <button @click=" () => console.log( dataToSave() ) ">Print</button>
-    <button @click=" () => callback.save( dataToSave() ) ">Save</button>
-    <button @click=" callback.cancel ">Cancel</button>
-
-
-</p>
+        <!-- <button @click=" () => console.log( dataToSave() ) ">Print</button> -->
+        <button @click=" () => callback.save( dataToSave() ) ">Save</button>
+        <button @click=" callback.cancel ">Cancel</button>
 
 
+    </p>
 
 
 </template>

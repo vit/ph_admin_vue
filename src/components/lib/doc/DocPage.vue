@@ -8,22 +8,19 @@ import DocPath from './DocPath.vue'
 import DocData from './DocData.vue'
 import DocChildren from './DocChildren.vue'
 
-
-// import { callRPC } from '../../../ts/api.ts';
 import { callRPC } from '@/ts/api.ts';
-
 
 const getDocChildren = ( id: string ) => callRPC( "get_doc_children", {id: id ? id : null})
 const getDocPath = ( id: string ) => callRPC( "get_doc_path", {id: id ? id : null})
-
 const getDocData = ( id: string ) => callRPC( "get_doc_data", {id: id})
 const setDocData = ( id: string, data:any ) => callRPC( "set_doc_data", {
     id,
     data,
 })
-
-// const getConfsList = () => callRPC( "get_confs_list", {})
-
+const newDocData = ( parent: string, data:any ) => callRPC( "new_doc_data", {
+    parent,
+    data,
+})
 
 const doc_path = reactive({data: null, error: null, loading: false})
 const doc_data = reactive({data: null, error: null, loading: false})
@@ -39,11 +36,20 @@ watch(
   { immediate: true }
 )
 
-const page_callback = {
+const edit_doc_callback = {
   save: async ( data:any ) => {
+    // console.log(data)
     const rez = await setDocData(id, data);
     fetchPathData( id )
     fetchDocData( id )
+  }
+}
+
+const add_doc_callback = {
+  save: async ( data:any ) => {
+    // console.log(data)
+    const rez = await newDocData(id, data);
+    fetchChildrenData(id)
   }
 }
 
@@ -91,40 +97,38 @@ async function fetchPathData(id : string) {
 
 <template>
   
-<h2>Lib/Doc </h2>
+  <h2>Lib/Doc </h2>
 
-
-<div class="path">
-  <h3 v-if="doc_path.loading" class="loading">Loading breadcrumbs...</h3>
-  <h3 v-if="doc_path.error" class="error" style="color: red">Breadcrumbs loading error: {{ doc_path.error }}</h3>
-  <div v-if="doc_path.data" >
-    <DocPath :path="doc_path.data" />
+  <div class="path">
+    <h3 v-if="doc_path.loading" class="loading">Loading breadcrumbs...</h3>
+    <h3 v-if="doc_path.error" class="error" style="color: red">Breadcrumbs loading error: {{ doc_path.error }}</h3>
+    <div v-if="doc_path.data" >
+      <DocPath :path="doc_path.data" />
+    </div>
   </div>
-</div>
 
 
-<div class="data">
-  <h3 v-if="doc_data.loading" class="loading">Loading document data...</h3>
-  <h3 v-if="doc_data.error" class="error" style="color: red">Document data loading error: {{ doc_data.error }}</h3>
-  <div v-if="doc_data.data" >
-    <DocData :data="doc_data.data" :callback="page_callback" />
+  <div class="data">
+    <h3 v-if="doc_data.loading" class="loading">Loading document data...</h3>
+    <h3 v-if="doc_data.error" class="error" style="color: red">Document data loading error: {{ doc_data.error }}</h3>
+    <div v-if="doc_data.data" >
+      <DocData :data="doc_data.data" :callback="edit_doc_callback" />
+    </div>
+    <div v-else>
+      404
+    </div>
   </div>
-</div>
 
 
-<div class="children">
-  <h3 v-if="doc_children.loading" class="loading">Loading children...</h3>
-  <h3 v-if="doc_children.error" class="error" style="color: red">Children loading error: {{ doc_children.error }}</h3>
-  <div v-if="doc_children.data" >
-    <DocChildren :id="id" :children="doc_children.data" />
+  <div class="children">
+    <h3 v-if="doc_children.loading" class="loading">Loading children...</h3>
+    <h3 v-if="doc_children.error" class="error" style="color: red">Children loading error: {{ doc_children.error }}</h3>
+    <div v-if="doc_children.data" >
+      <DocChildren :id="id" :children="doc_children.data" :callback="add_doc_callback" />
+    </div>
   </div>
-</div>
-
 
 </template>
-
-
-
 
 
 <style>

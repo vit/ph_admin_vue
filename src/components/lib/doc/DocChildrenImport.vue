@@ -18,27 +18,25 @@
     // const paperid = $route.params;
 
     watch(
-    () => id,
-    () => {
-        fetchConfsList()
-    },
-    { immediate: true }
+        () => id,
+        () => {
+            fetchConfsList()
+        },
+        { immediate: true }
     )
 
     async function fetchConfsList() {
-    confs_list.error = confs_list.data = null
-    confs_list.loading = true
-    
-    try {
-        confs_list.data = await getConfsList()  
-    } catch (err) {
-        confs_list.error = err.toString()
-    } finally {
-        confs_list.loading = false
+        confs_list.error = confs_list.data = null
+        confs_list.loading = true
+        
+        try {
+            confs_list.data = await getConfsList()  
+        } catch (err) {
+            confs_list.error = err.toString()
+        } finally {
+            confs_list.loading = false
+        }
     }
-    }
-
-
 
 </script>
 
@@ -94,18 +92,18 @@
 
 <style scoped>
 
-.wrap {
-  display: flex;
-  justify-content: space-between;
-}
+    .wrap {
+    display: flex;
+    justify-content: space-between;
+    }
 
-.left  {
-  flex: 1;
-}
+    .left  {
+    flex: 1;
+    }
 
-.right {
-  flex: 2;
-}
+    .right {
+    flex: 2;
+    }
 
     .title {
         font-family: Georgia, 'Times New Roman', Times, serif;

@@ -1,42 +1,77 @@
 <script setup lang="ts">
 
-    import ImportBlock from '@/components/lib/doc/DocChildrenImport.vue'
-    import { ref, reactive, watch } from 'vue'
-
-    const { id, children } = defineProps(['id', 'children'])
-
-    const showImportBlock = ref(false)
-    const hideImportBlock =() => showImportBlock.value = false
+  import ImportBlock from '@/components/lib/doc/DocChildrenImport.vue'
+  import DocDataEdit from '@/components/lib/doc/DocDataEdit.vue'
 
 
-    import { callRPC } from '@/ts/api.ts';
+  import { ref, reactive, watch } from 'vue'
 
-    const getConfsList = () => callRPC( "get_confs_list", {})
+  const { id, children, callback } = defineProps(['id', 'children', 'callback'])
 
-    const confs_list = reactive({data: null, error: null, loading: false})
+  const showImportBlock = ref(false)
+  const hideImportBlock =() => showImportBlock.value = false
+
+  const showAddBlock = ref(false)
+  const hideAddBlock =() => showAddBlock.value = false
+
+    const checkedChildren = ref([])
+    const checkAll = ref(false)
+
+    watch(
+        // () => checkAll,
+        checkAll,
+        () => {
+            // console.log("checkAll changed, ", checkAll.value)
+            // if(papers_list.data)
+                checkedChildren.value = checkAll.value ? children.map(c => c.id) : []
+        },
+        { immediate: true }
+    )
 
 
+  // import { callRPC } from '@/ts/api.ts';
 
-watch(
-  () => id,
-  () => {
-    fetchConfsList()
-  },
-  { immediate: true }
-)
+  // const getConfsList = () => callRPC( "get_confs_list", {})
 
-async function fetchConfsList() {
-  confs_list.error = confs_list.data = null
-  confs_list.loading = true
-  
-  try {
-    confs_list.data = await getConfsList()  
-  } catch (err) {
-    confs_list.error = err.toString()
-  } finally {
-    confs_list.loading = false
+  // const confs_list = reactive({data: null, error: null, loading: false})
+
+  const data_callback = {
+      ...callback,
+      cancel: hideAddBlock
   }
-}
+
+  const data = ref({
+    info: {
+        title: '',
+        subtitle: '',
+        abstract: ''
+    },
+    authors: []
+  })
+  const cloneObject = (o) => JSON.parse(JSON.stringify(o));
+
+
+
+// watch(
+//   () => id,
+//   () => {
+//     fetchConfsList()
+//   },
+//   { immediate: true }
+// )
+
+// async function fetchConfsList() {
+//   confs_list.error = confs_list.data = null
+//   confs_list.loading = true
+  
+//   try {
+//     confs_list.data = await getConfsList()  
+//   } catch (err) {
+//     confs_list.error = err.toString()
+//   } finally {
+//     confs_list.loading = false
+//   }
+// }
 
 
 
@@ -49,22 +84,41 @@ async function fetchConfsList() {
 
     <h3>Children</h3>
 
-    <p>id={{id}}</p>
+    <!-- <p>id={{id}}</p> -->
+
+
+
+
+
+
 
     <p>
         <button
-            v-if="!showImportBlock"
+            v-if="!showImportBlock && !showAddBlock"
+            @click=" () => showAddBlock = true "
+        >Add</button>
+
+        <button
+            v-if="!showImportBlock && !showAddBlock"
             @click=" () => showImportBlock = true "
         >Import</button>
 
-        <!-- <ImportBlock :id="id" v-if="showImportBlock" :onHide="hideImportBlock" > -->
         <ImportBlock :id="id" v-if="showImportBlock" @onHide="hideImportBlock" >
         </ImportBlock>
 
+        <DocDataEdit
+          v-if="showAddBlock"
+          :data="cloneObject(data)"
+          :callback="data_callback"
+        ></DocDataEdit>
+
     </p>
 
+
+    <input type="checkbox" v-model="checkAll">
     <ul>
         <li v-for="elm in children" class="elm">
+            <input type="checkbox" :value="elm.id" v-model="checkedChildren">
             <router-link :to="'/lib/' + elm.id">{{ elm.info.title }}</router-link>
             <div class="subtitle">{{ elm.info.subtitle }}</div>
             <div v-if="Array.isArray(elm.authors)" class="authors">{{ elm.authors.map(a => a.fname + " " + a.lname).join(", ") }}</div>

@@ -1,36 +1,30 @@
 <script setup lang="ts">
 
-// const { id, data } = defineProps(['id', 'data'])
+    // const { id, data } = defineProps(['id', 'data'])
 
-// const { data } = defineProps(['data'])
-const { data } = defineProps(['data'])
-// const { data, callback } = defineProps(['data', 'callback'])
-
-
+    // const { data } = defineProps(['data'])
+    const { data } = defineProps(['data'])
+    // const { data, callback } = defineProps(['data', 'callback'])
 
 </script>
 
 <template>
 
+    <div class="data-view">
 
-<div class="data-view">
+        <h4 class="title">{{ data.info.title }}</h4>
 
-    <h4 class="title">{{ data.info.title }}</h4>
+        <p class="subtitle">{{ data.info.subtitle }}</p>
 
-    <p class="subtitle">{{ data.info.subtitle }}</p>
+        <p class="abstract">
+            {{ data.info.abstract }}
+        </p>
 
-    <p class="abstract">
-        {{ data.info.abstract }}
-    </p>
+        <p>
+            <span v-for="a in data.authors" class="author">{{a.fname}} {{a.lname}}</span>
+        </p>
 
-    <p>
-        <span v-for="a in data.authors" class="author">{{a.fname}} {{a.lname}}</span>
-    </p>
-
-
-
-</div>
-
+    </div>
 
 </template>
 

@@ -8,7 +8,8 @@ const { path } = defineProps(['path'])
 
 <div class="path">
 
-    <p>
+
+    <p vv-if="path">
         <span class="elm">
             <router-link to="/lib/" class="elm">Root</router-link>
         </span>
@@ -20,7 +21,6 @@ const { path } = defineProps(['path'])
 </div>
 
 </template>
-
 
 <style>
 

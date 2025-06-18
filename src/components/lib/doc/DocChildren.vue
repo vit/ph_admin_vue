@@ -114,8 +114,7 @@
 
     </p>
 
-
-    <input type="checkbox" v-model="checkAll">
+    <input type="checkbox" v-model="checkAll"> <b>Select/Deselect all</b>
     <ul>
         <li v-for="elm in children" class="elm">
             <input type="checkbox" :value="elm.id" v-model="checkedChildren">

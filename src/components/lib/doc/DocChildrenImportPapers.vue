@@ -86,9 +86,8 @@
                     >Import Marked</button>
                     <br>
 
-                    <input type="checkbox" v-model="checkAll">
                     <div style="overflow: scroll; max-height: 80vh;" sstyle="display: flex;">
-                        <b>Select/Deselect all</b>
+                        <input type="checkbox" v-model="checkAll"> <b>Select/Deselect all</b>
                         <ul>
                             <li v-for="c in papers_list.data">
                                 <input type="checkbox" :value="c.papnum" v-model="checkedPapers">

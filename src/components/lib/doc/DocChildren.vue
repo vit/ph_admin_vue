@@ -1,39 +1,28 @@
 <script setup lang="ts">
 
-  import ImportBlock from '@/components/lib/doc/DocChildrenImport.vue'
-  import DocDataEdit from '@/components/lib/doc/DocDataEdit.vue'
+    import ImportBlock from '@/components/lib/doc/DocChildrenImport.vue'
+    import DocDataEdit from '@/components/lib/doc/DocDataEdit.vue'
 
+    import { ref, reactive, watch } from 'vue'
 
-  import { ref, reactive, watch } from 'vue'
+    const { id, children, callback } = defineProps(['id', 'children', 'callback'])
 
-  const { id, children, callback } = defineProps(['id', 'children', 'callback'])
+    const showImportBlock = ref(false)
+    const hideImportBlock =() => showImportBlock.value = false
 
-  const showImportBlock = ref(false)
-  const hideImportBlock =() => showImportBlock.value = false
-
-  const showAddBlock = ref(false)
-  const hideAddBlock =() => showAddBlock.value = false
+    const showAddBlock = ref(false)
+    const hideAddBlock =() => showAddBlock.value = false
 
     const checkedChildren = ref([])
     const checkAll = ref(false)
 
     watch(
-        // () => checkAll,
         checkAll,
         () => {
-            // console.log("checkAll changed, ", checkAll.value)
-            // if(papers_list.data)
-                checkedChildren.value = checkAll.value ? children.map(c => c.id) : []
+            checkedChildren.value = checkAll.value ? children.map(c => c.id) : []
         },
         { immediate: true }
     )
-
-
-  // import { callRPC } from '@/ts/api.ts';
-
-  // const getConfsList = () => callRPC( "get_confs_list", {})
-
-  // const confs_list = reactive({data: null, error: null, loading: false})
 
   const data_callback = {
       ...callback,
@@ -50,86 +39,78 @@
   })
   const cloneObject = (o) => JSON.parse(JSON.stringify(o));
 
-
-
-// watch(
-//   () => id,
-//   () => {
-//     fetchConfsList()
-//   },
-//   { immediate: true }
-// )
-
-// async function fetchConfsList() {
-//   confs_list.error = confs_list.data = null
-//   confs_list.loading = true
-  
-//   try {
-//     confs_list.data = await getConfsList()  
-//   } catch (err) {
-//     confs_list.error = err.toString()
-//   } finally {
-//     confs_list.loading = false
-//   }
-// }
-
-
+    function confirmDelete() {
+        // console.log(window)
+        if(confirm('Are you sure you want to DELETE selected documents?'))
+            callback.remove_docs(checkedChildren.value)
+    }
+    function doUpdate() {
+        // console.log(window)
+        alert(checkedChildren.value)
+            callback.update_imported_files(id, checkedChildren.value)
+    }
 
 </script>
 
 
 <template>
 
-<div class="children">
+    <div class="children">
 
-    <h3>Children</h3>
+        <h3>Children</h3>
 
-    <!-- <p>id={{id}}</p> -->
+        <p>
+            <button
+                v-if="!showImportBlock && !showAddBlock"
+                @click=" () => showAddBlock = true "
+            >Add</button>
 
+            <button
+                v-if="!showImportBlock && !showAddBlock"
+                @click=" () => showImportBlock = true "
+            >Import</button>
 
+            <ImportBlock :id="id" v-if="showImportBlock" @onHide="hideImportBlock" >
+            </ImportBlock>
 
+            <DocDataEdit
+                v-if="showAddBlock"
+                :data="cloneObject(data)"
+                :callback="data_callback"
+            ></DocDataEdit>
 
+        </p>
 
+        <input type="checkbox" v-model="checkAll"> <b>Select/Deselect all</b>
+        <ul>
+            <li v-for="elm in children" class="elm">
+                <input type="checkbox" :value="elm.id" v-model="checkedChildren">
+                <router-link :to="'/lib/' + elm.id">{{ elm.info.title }}</router-link>
+                <div class="subtitle">{{ elm.info.subtitle }}</div>
+                <div v-if="Array.isArray(elm.authors)" class="authors">{{ elm.authors.map(a => a.fname + " " + a.lname).join(", ") }}</div>
+            </li>
+        </ul>
 
-
-    <p>
         <button
-            v-if="!showImportBlock && !showAddBlock"
-            @click=" () => showAddBlock = true "
-        >Add</button>
-
+            @click=" () => {
+//                if(window.confirm('Are you sure you want to DELETE selected documents?'))
+//                    callback.remove_docs(checkedChildren)
+                confirmDelete()
+            } "
+        >Delete checked</button>
         <button
-            v-if="!showImportBlock && !showAddBlock"
-            @click=" () => showImportBlock = true "
-        >Import</button>
+            @click=" () => {
+                doUpdate()
+            } "
+        >Update files for checked</button>
 
-        <ImportBlock :id="id" v-if="showImportBlock" @onHide="hideImportBlock" >
-        </ImportBlock>
 
-        <DocDataEdit
-          v-if="showAddBlock"
-          :data="cloneObject(data)"
-          :callback="data_callback"
-        ></DocDataEdit>
+    </div>
 
-    </p>
-
-    <input type="checkbox" v-model="checkAll"> <b>Select/Deselect all</b>
-    <ul>
-        <li v-for="elm in children" class="elm">
-            <input type="checkbox" :value="elm.id" v-model="checkedChildren">
-            <router-link :to="'/lib/' + elm.id">{{ elm.info.title }}</router-link>
-            <div class="subtitle">{{ elm.info.subtitle }}</div>
-            <div v-if="Array.isArray(elm.authors)" class="authors">{{ elm.authors.map(a => a.fname + " " + a.lname).join(", ") }}</div>
-        </li>
-    </ul>
-
-</div>
+    <p>&nbsp;</p>
 
 </template>
 
-
-           
 
 <style scoped>
 

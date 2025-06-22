@@ -1,13 +1,12 @@
 <script setup lang="ts">
 
-const { path } = defineProps(['path'])
+    const { path } = defineProps(['path'])
 
 </script>
 
 <template>
 
 <div class="path">
-
 
     <p vv-if="path">
         <span class="elm">

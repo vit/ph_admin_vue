@@ -21,6 +21,13 @@ const newDocData = ( parent: string, data:any ) => callRPC( "new_doc_data", {
     parent,
     data,
 })
+const removeDocs = ( list:any ) => callRPC( "remove_docs", {
+    list
+})
+const updateImportedFiles = ( parent: string, list:any ) => callRPC( "update_imported_files", {
+    parent,
+    list
+})
 
 const doc_path = reactive({data: null, error: null, loading: false})
 const doc_data = reactive({data: null, error: null, loading: false})
@@ -45,10 +52,20 @@ const edit_doc_callback = {
   }
 }
 
-const add_doc_callback = {
+const docs_callback = {
   save: async ( data:any ) => {
     // console.log(data)
     const rez = await newDocData(id, data);
+    fetchChildrenData(id)
+  },
+  remove_docs: async ( list:any ) => {
+    // console.log(data)
+    const rez = await removeDocs(list);
+    fetchChildrenData(id)
+  },
+  update_imported_files: async ( parent:string, list:any ) => {
+    // console.log(data)
+    const rez = await updateImportedFiles(id, list);
     fetchChildrenData(id)
   }
 }
@@ -114,9 +131,9 @@ async function fetchPathData(id : string) {
     <div v-if="doc_data.data" >
       <DocData :data="doc_data.data" :callback="edit_doc_callback" />
     </div>
-    <div v-else>
+    <!-- <div v-else-if="id">
       404
-    </div>
+    </div> -->
   </div>
 
 
@@ -124,7 +141,7 @@ async function fetchPathData(id : string) {
     <h3 v-if="doc_children.loading" class="loading">Loading children...</h3>
     <h3 v-if="doc_children.error" class="error" style="color: red">Children loading error: {{ doc_children.error }}</h3>
     <div v-if="doc_children.data" >
-      <DocChildren :id="id" :children="doc_children.data" :callback="add_doc_callback" />
+      <DocChildren :id="id" :children="doc_children.data" :callback="docs_callback" />
     </div>
   </div>
 

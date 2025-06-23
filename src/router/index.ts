@@ -16,6 +16,10 @@ const router = createRouter({
       name: 'lib',
       component: () => import('../views/LibView.vue'),
       props: true,
+      meta: {
+        title: 'Library admin | IPACS',
+        description: '',
+      }
     },
     {
       path: '/about',
@@ -23,6 +27,10 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue'),
     },
   ],
+})
+
+router.beforeEach((to, from) => {
+  document.title = to.meta?.title ?? 'Physcon admin'
 })
 
 export default router

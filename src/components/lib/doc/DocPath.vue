@@ -6,42 +6,42 @@
 
 <template>
 
-<div class="path">
+    <div class="path">
 
-    <p vv-if="path">
-        <span class="elm">
-            <router-link to="/lib/" class="elm">Root</router-link>
-        </span>
-        <span v-for="elm in path" class="elm">
-            <router-link :to="'/lib/' + elm.id" class="elm">{{ elm.info.title }}</router-link>
-        </span>
-    </p>
+        <p vv-if="path">
+            <span class="elm">
+                <router-link to="/lib/" class="elm">Root</router-link>
+            </span>
+            <span v-for="elm in path" class="elm">
+                <router-link :to="'/lib/' + elm.id" class="elm">{{ elm.info.title }}</router-link>
+            </span>
+        </p>
 
-</div>
+    </div>
 
 </template>
 
 <style>
 
-.path {
-    margin: 5px 0px 25px 0px;
+    .path {
+        margin: 5px 0px 25px 0px;
 
-    .elm {
-    }
-    .elm a {
-        font-family: Arial, Helvetica, sans-serif;
-    }
-    .elm:not(:last-of-type)::after {
-        content: " / ";
-    }
-    .elm:last-of-type {
-        a {
-            pointer-events: none;
-            cursor: default;
-            text-decoration: none;
+        .elm {
         }
-    }
+        .elm a {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .elm:not(:last-of-type)::after {
+            content: " / ";
+        }
+        .elm:last-of-type {
+            a {
+                pointer-events: none;
+                cursor: default;
+                text-decoration: none;
+            }
+        }
 
-}
+    }
 
 </style>

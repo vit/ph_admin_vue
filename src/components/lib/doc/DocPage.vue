@@ -1,113 +1,113 @@
 <script setup lang="ts">
 
-const {id} = defineProps(['id'])
+  const {id} = defineProps(['id'])
 
-import { ref, reactive, watch } from 'vue'
+  import { ref, reactive, watch } from 'vue'
 
-import DocPath from './DocPath.vue'
-import DocData from './DocData.vue'
-import DocChildren from './DocChildren.vue'
+  import DocPath from './DocPath.vue'
+  import DocData from './DocData.vue'
+  import DocChildren from './DocChildren.vue'
 
-import { callRPC } from '@/ts/api.ts';
+  import { callRPC } from '@/ts/api.ts';
 
-const getDocChildren = ( id: string ) => callRPC( "get_doc_children", {id: id ? id : null})
-const getDocPath = ( id: string ) => callRPC( "get_doc_path", {id: id ? id : null})
-const getDocData = ( id: string ) => callRPC( "get_doc_data", {id: id})
-const setDocData = ( id: string, data:any ) => callRPC( "set_doc_data", {
-    id,
-    data,
-})
-const newDocData = ( parent: string, data:any ) => callRPC( "new_doc_data", {
-    parent,
-    data,
-})
-const removeDocs = ( list:any ) => callRPC( "remove_docs", {
-    list
-})
-const updateImportedFiles = ( parent: string, list:any ) => callRPC( "update_imported_files", {
-    parent,
-    list
-})
+  const getDocChildren = ( id: string ) => callRPC( "get_doc_children", {id: id ? id : null})
+  const getDocPath = ( id: string ) => callRPC( "get_doc_path", {id: id ? id : null})
+  const getDocData = ( id: string ) => callRPC( "get_doc_data", {id: id})
+  const setDocData = ( id: string, data:any ) => callRPC( "set_doc_data", {
+      id,
+      data,
+  })
+  const newDocData = ( parent: string, data:any ) => callRPC( "new_doc_data", {
+      parent,
+      data,
+  })
+  const removeDocs = ( list:any ) => callRPC( "remove_docs", {
+      list
+  })
+  const updateImportedFiles = ( parent: string, list:any ) => callRPC( "update_imported_files", {
+      parent,
+      list
+  })
 
-const doc_path = reactive({data: null, error: null, loading: false})
-const doc_data = reactive({data: null, error: null, loading: false})
-const doc_children = reactive({data: null, error: null, loading: false})
+  const doc_path = reactive({data: null, error: null, loading: false})
+  const doc_data = reactive({data: null, error: null, loading: false})
+  const doc_children = reactive({data: null, error: null, loading: false})
 
-watch(
-  () => id,
-  () => {
-    fetchPathData( id )
-    fetchDocData( id )
-    fetchChildrenData( id )
-  },
-  { immediate: true }
-)
+  watch(
+    () => id,
+    () => {
+      fetchPathData( id )
+      fetchDocData( id )
+      fetchChildrenData( id )
+    },
+    { immediate: true }
+  )
 
-const edit_doc_callback = {
-  save: async ( data:any ) => {
-    // console.log(data)
-    const rez = await setDocData(id, data);
-    fetchPathData( id )
-    fetchDocData( id )
+  const edit_doc_callback = {
+    save: async ( data:any ) => {
+      // console.log(data)
+      const rez = await setDocData(id, data);
+      fetchPathData( id )
+      fetchDocData( id )
+    }
   }
-}
 
-const docs_callback = {
-  save: async ( data:any ) => {
-    // console.log(data)
-    const rez = await newDocData(id, data);
-    fetchChildrenData(id)
-  },
-  remove_docs: async ( list:any ) => {
-    // console.log(data)
-    const rez = await removeDocs(list);
-    fetchChildrenData(id)
-  },
-  update_imported_files: async ( parent:string, list:any ) => {
-    // console.log(data)
-    const rez = await updateImportedFiles(id, list);
-    fetchChildrenData(id)
+  const docs_callback = {
+    save: async ( data:any ) => {
+      // console.log(data)
+      const rez = await newDocData(id, data);
+      fetchChildrenData(id)
+    },
+    remove_docs: async ( list:any ) => {
+      // console.log(data)
+      const rez = await removeDocs(list);
+      fetchChildrenData(id)
+    },
+    update_imported_files: async ( parent:string, list:any ) => {
+      // console.log(data)
+      const rez = await updateImportedFiles(id, list);
+      fetchChildrenData(id)
+    }
   }
-}
 
-async function fetchChildrenData(id : string) {
-  doc_children.error = doc_children.data = null
-  doc_children.loading = true
-  
-  try {
-    doc_children.data = await getDocChildren(id)  
-  } catch (err) {
-    doc_children.error = err.toString()
-  } finally {
-    doc_children.loading = false
+  async function fetchChildrenData(id : string) {
+    doc_children.error = doc_children.data = null
+    doc_children.loading = true
+    
+    try {
+      doc_children.data = await getDocChildren(id)  
+    } catch (err) {
+      doc_children.error = err.toString()
+    } finally {
+      doc_children.loading = false
+    }
   }
-}
 
-async function fetchDocData(id : string) {
-  doc_data.error = doc_data.data = null
-  doc_data.loading = true
-  
-  try {
-    doc_data.data = await getDocData(id)  
-  } catch (err) {
-    doc_data.error = err.toString()
-  } finally {
-    doc_data.loading = false
+  async function fetchDocData(id : string) {
+    doc_data.error = doc_data.data = null
+    doc_data.loading = true
+    
+    try {
+      doc_data.data = await getDocData(id)  
+    } catch (err) {
+      doc_data.error = err.toString()
+    } finally {
+      doc_data.loading = false
+    }
   }
-}
 
-async function fetchPathData(id : string) {
-  doc_path.error = doc_path.data = null
-  doc_path.loading = true
-  
-  try {
-    doc_path.data = await getDocPath(id)  
-  } catch (err) {
-    doc_path.error = err.toString()
-  } finally {
-    doc_path.loading = false
+  async function fetchPathData(id : string) {
+    doc_path.error = doc_path.data = null
+    doc_path.loading = true
+    
+    try {
+      doc_path.data = await getDocPath(id)  
+    } catch (err) {
+      doc_path.error = err.toString()
+    } finally {
+      doc_path.loading = false
+    }
   }
-}
 
 </script>
 

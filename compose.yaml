@@ -1,0 +1,28 @@
+name: ph_admin_${ENV_NAME}
+
+services:
+  frontend:
+    image: node:18-alpine
+    container_name: ph_admin_fe_${ENV_NAME}
+    working_dir: /app
+    volumes:
+      - ./app/:/app  # Монтируем текущую директорию
+      # - /app/node_modules  # Отдельный том для node_modules
+    ports:
+      - "5173:5173"  # Порт Vite
+    environment:
+      VITE_HOST: ${ADMIN_DOMAIN_NAME},
+      API_BASE: ${API_BASE},
+      NODE_ENV: ${ENV_NAME},
+      VIRTUAL_HOST: ${ADMIN_DOMAIN_NAME},
+      LETSENCRYPT_HOST: ${ADMIN_DOMAIN_NAME},
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    networks:
+      - frontend
+
+
+networks:
+  frontend:
+    external: true 
+    name: frontend 
+

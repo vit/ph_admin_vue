@@ -1,5 +1,8 @@
 
-const rpcURL = 'http://api.physcon.my/rpc'
+// const rpcURL = 'http://api.physcon.my/rpc'
+const rpcURL = import.meta.env.VITE_API_BASE+'/rpc'
+
+// console.log(rpcURL)
 
 import { useAuthStore } from '@/stores/auth'
 // import { storeToRefs } from 'pinia' // Для реактивности геттеров

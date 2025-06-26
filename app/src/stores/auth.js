@@ -2,7 +2,8 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
-const tokenURL = 'http://api.physcon.my/token'
+// const tokenURL = 'http://api.physcon.my/token'
+const tokenURL = import.meta.env.VITE_API_BASE+'/token'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -32,12 +33,3 @@ export const useAuthStore = defineStore('auth', {
   },
 })
 
-
-
-// const response = await axios.post("/token", credentials, {
-//     headers: {
-//       "Content-Type": "application/json",  // <- важно!
-//     },
-//   });
-//   this.token = response.data.access_token;
-//   localStorage.setItem("token", this.token);

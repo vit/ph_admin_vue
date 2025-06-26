@@ -11,11 +11,11 @@ services:
     ports:
       - "5173:5173"  # Порт Vite
     environment:
-      VITE_HOST: ${ADMIN_DOMAIN_NAME},
-      API_BASE: ${API_BASE},
-      NODE_ENV: ${ENV_NAME},
-      VIRTUAL_HOST: ${ADMIN_DOMAIN_NAME},
-      LETSENCRYPT_HOST: ${ADMIN_DOMAIN_NAME},
+      VITE_HOST: ${ADMIN_DOMAIN_NAME}
+      VITE_API_BASE: ${API_BASE}
+      NODE_ENV: ${ENV_NAME}
+      VIRTUAL_HOST: ${ADMIN_DOMAIN_NAME}
+      LETSENCRYPT_HOST: ${ADMIN_DOMAIN_NAME}
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
     networks:
       - frontend

@@ -2,7 +2,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
-// const tokenURL = 'http://api.physcon.my/token'
 const tokenURL = import.meta.env.VITE_API_BASE+'/token'
 
 export const useAuthStore = defineStore('auth', {

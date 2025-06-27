@@ -2,10 +2,10 @@
 <script setup>
 
   import { useAuthStore } from '@/stores/auth'
-  import { storeToRefs } from 'pinia' // Для реактивности геттеров
+  import { storeToRefs } from 'pinia'
 
   const authStore = useAuthStore()
-  const { isAuthenticated } = storeToRefs(authStore) // Реактивный геттер
+  const { isAuthenticated } = storeToRefs(authStore)
 
   import DocPage from '../components/lib/doc/DocPage.vue';
   import Login from './Login.vue';

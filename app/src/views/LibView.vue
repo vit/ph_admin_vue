@@ -14,7 +14,7 @@
 
 <template>
   <div>
-    <div>Token: {{ authStore.token }}</div>
+    <!-- <div>Token: {{ authStore.token }}</div> -->
 
     <DocPage v-if="isAuthenticated" :id="$route.params.id" />
     <Login v-else />

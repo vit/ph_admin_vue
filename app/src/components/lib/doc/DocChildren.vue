@@ -70,7 +70,7 @@
                 @click=" () => showImportBlock = true "
             >Import</button>
 
-            <ImportBlock :id="id" v-if="showImportBlock" @onHide="hideImportBlock" >
+            <ImportBlock @imported="$emit('imported')" :id="id" v-if="showImportBlock" @onHide="hideImportBlock" >
             </ImportBlock>
 
             <DocDataEdit
@@ -105,9 +105,8 @@
         >Update files for checked</button>
 
 
+        <p>&nbsp;</p>
     </div>
-
-    <p>&nbsp;</p>
 
 </template>
 

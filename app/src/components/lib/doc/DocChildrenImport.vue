@@ -71,7 +71,7 @@
                     </div>
                 </div>
 
-                <DocChildrenImportPapers class="right" :contid="$route.query.contid" :id="id" />
+                <DocChildrenImportPapers @imported="$emit('imported')" class="right" :contid="$route.query.contid" :id="id" />
 
             </div>
 

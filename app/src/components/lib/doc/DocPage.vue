@@ -33,6 +33,8 @@
   const doc_data = reactive({data: null, error: null, loading: false})
   const doc_children = reactive({data: null, error: null, loading: false})
 
+  const handleImported = () => fetchChildrenData( id )
+
   watch(
     () => id,
     () => {
@@ -45,7 +47,6 @@
 
   const edit_doc_callback = {
     save: async ( data:any ) => {
-      // console.log(data)
       const rez = await setDocData(id, data);
       fetchPathData( id )
       fetchDocData( id )
@@ -54,17 +55,14 @@
 
   const docs_callback = {
     save: async ( data:any ) => {
-      // console.log(data)
       const rez = await newDocData(id, data);
       fetchChildrenData(id)
     },
     remove_docs: async ( list:any ) => {
-      // console.log(data)
       const rez = await removeDocs(list);
       fetchChildrenData(id)
     },
     update_imported_files: async ( parent:string, list:any ) => {
-      // console.log(data)
       const rez = await updateImportedFiles(id, list);
       fetchChildrenData(id)
     }
@@ -131,9 +129,6 @@
     <div v-if="doc_data.data" >
       <DocData :data="doc_data.data" :callback="edit_doc_callback" />
     </div>
-    <!-- <div v-else-if="id">
-      404
-    </div> -->
   </div>
 
 
@@ -141,7 +136,7 @@
     <h3 v-if="doc_children.loading" class="loading">Loading children...</h3>
     <h3 v-if="doc_children.error" class="error" style="color: red">Children loading error: {{ doc_children.error }}</h3>
     <div v-if="doc_children.data" >
-      <DocChildren :id="id" :children="doc_children.data" :callback="docs_callback" />
+      <DocChildren @imported="handleImported" :id="id" :children="doc_children.data" :callback="docs_callback" />
     </div>
   </div>
 

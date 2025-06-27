@@ -13,10 +13,13 @@
 
     const getPapersList = () => callRPC( "get_papers_list", {contid})
 
-    const onImport = () => {
+    const emit = defineEmits(['imported'])
+
+    const onImport = async () => {
         // console.log("context: ", contid)
         // console.log("checkAll papers: ", checkedPapers.value.map(v => v))
-        callRPC( "import_docs_from_coms", {id, list: checkedPapers.value.map(papnum => ({context: contid, papnum}))})
+        await callRPC( "import_docs_from_coms", {id, list: checkedPapers.value.map(papnum => ({context: contid, papnum}))})
+        emit('imported')
     }
 
     const papers_list = reactive({data: null, error: null, loading: false})

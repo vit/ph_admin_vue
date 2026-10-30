@@ -2,14 +2,14 @@ name: ph_admin_${ENV_NAME}
 
 services:
   frontend:
-    image: node:18-alpine
+    image: node:24-alpine
     container_name: ph_admin_fe_${ENV_NAME}
     working_dir: /app
+    expose:
+      - 5173
     volumes:
-      - ./app/:/app  # Монтируем текущую директорию
-      # - /app/node_modules  # Отдельный том для node_modules
-    ports:
-      - "5173:5173"  # Порт Vite
+      - ./app/:/app
+      # - /app/node_modules
     environment:
       VITE_HOST: ${ADMIN_DOMAIN_NAME}
       VITE_API_BASE: ${API_BASE}
@@ -23,6 +23,5 @@ services:
 
 networks:
   frontend:
-    external: true 
-    name: frontend 
-
+    external: true
+    name: frontend

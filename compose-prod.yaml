@@ -1,0 +1,33 @@
+name: ph_admin_${ENV_NAME}
+
+services:
+  frontend:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_HOST: ${ADMIN_DOMAIN_NAME}
+        VITE_API_BASE: ${API_BASE}
+        NODE_ENV: production
+
+#    image: ph_admin_fe:${ENV_NAME:-prod}
+    container_name: ph_admin_fe_${ENV_NAME}
+
+    restart: unless-stopped
+
+    expose:
+      - "80"
+
+    environment:
+      VIRTUAL_HOST: ${ADMIN_DOMAIN_NAME}
+      VIRTUAL_PORT: "80"
+      LETSENCRYPT_HOST: ${ADMIN_DOMAIN_NAME}
+
+    networks:
+      - frontend
+
+networks:
+  frontend:
+    external: true
+    name: frontend
+
